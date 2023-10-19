@@ -21,7 +21,7 @@ PROMPT='%B%F{green}%n%f@%F{magenta}%m%f %F{blue}%~%f %#%b '
 # alias'
 alias ls="ls --color=auto"
 alias ip="ip --color=auto"
-alias dots='/usr/bin/git --git-dir=$HOME/.dots/ --work-tree=$HOME'
+alias dots='/usr/bin/git --git-dir=$HOME/.dots --work-tree=$HOME'
 
 # Env
 umask 0027
