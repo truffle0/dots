@@ -1,0 +1,35 @@
+# My theme is a mix between the Drun and DOS themes
+
+# Drun theme
+anchor = top-left
+width = 60%
+height = 24
+horizontal = true
+font-size = 12
+#prompt-text = " run: "
+#font = monospace
+outline-width = 0
+border-width = 0
+background-color = #000000
+min-input-width = 120
+result-spacing = 15
+padding-top = 0
+padding-bottom = 0
+padding-left = 0
+padding-right = 0
+
+# DOS theme
+font = VT323
+#corner-radius = 60
+outline-color = #D3D1B9
+#outline-width = 3
+#border-color = #E3E1C9
+#border-width = 60
+#background-color = #000000
+text-color = #0A3
+selection-color = #0F6
+prompt-text = "C:\> "
+#num-results = 9
+hide-cursor = true
+#width = 640
+#height = 480

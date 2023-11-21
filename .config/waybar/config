@@ -1,15 +1,12 @@
 [{
   "layer": "top",
   "position": "top",
-  //"name": "bar-utility",
-  "output": "eDP-1",
-  //"output": "DP-1",
   "modules-left": ["tray"],
   "modules-center": ["idle_inhibitor", "bluetooth", "clock", "pulseaudio", "backlight"],
   "modules-right": ["cpu", "memory", "network", "battery", "temperature"],
   "gtk-layer-shell": true,
-  "ipc": false,
-  //"bar_id": "bar-1",
+  "ipc": true,
+  "id": "1",
   "exclusive": true,
   "clock": {
     "timezone": "Australia/Melbourne",
@@ -104,31 +101,5 @@
     "on-click": "alacritty -e bluetoothctl",
 		"on-middle-click": "rfkill toggle bluetooth",
 		"tooltip-format": "{status}"
-  }
-}, {
-  "layer": "top",
-  "position": "bottom",
-  //"output": "DP-1",
-  "modules-left": ["sway/workspaces", "sway/mode"],
-  "modules-center": ["wlr/taskbar"],
-  //"modules-right": [],
-  "name": "bar-task",
-  //"bar_id": "bar-0",
-  "gtk-layer-shell": true,
-  "ipc": true,
-  "exclusive": false,
-  "sway/mode": {
-    "format": "<span style=\"italic\">{}</span>"
-  },
-  "wlr/taskbar": {
-    "format": "{icon} {app_id}",
-    "icon-size": 14,
-    "icon-theme": "ePapirus",
-    "tooltip": true,
-    "tooltip-format": "{title}",
-    "on-click": "activate",
-    "on-click-right": "minimize",
-    "on-click-middle": "close",
-    "all-outputs": false,
   }
 }]
