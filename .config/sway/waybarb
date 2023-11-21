@@ -1,0 +1,2 @@
+#!/bin/bash
+waybar -c ~/.config/waybar/configb
