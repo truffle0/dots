@@ -24,7 +24,7 @@ function generate_color_prompt() {
 	if [[ `id -u` != 0 ]] ; then
 		# Generate a unique color for the machine's prompt
 		# Change $1 to use a different option
-		local OFFSET=${1:-7}
+		local OFFSET=${1:-6}
 		local MACHINE_COLOR=`hostname | md5sum | awk '{ print substr($1, '"${OFFSET}"', 6) }'`
 		PROMPT="${PROMPT}%B%F{green}%n%f@%F{#${MACHINE_COLOR}}%m%f "
 	else
