@@ -169,7 +169,7 @@ input "1:1:AT_Translated_Set_2_keyboard" {
 #
 # Workspaces:
 #
-    # Switch to workspace
+	# Switch to workspace
     bindsym $mod+1 workspace number 1
     bindsym $mod+2 workspace number 2
     bindsym $mod+3 workspace number 3
@@ -273,8 +273,9 @@ bindsym XF86MonBrightnessUp exec light -A 10
 bindsym XF86MonBrightnessDown exec light -U 10
 
 # Laptop Screen handling
-bindswitch --reload --locked lid:on output eDP-1 disable
-bindswitch --reload --locked lid:off output eDP-1 enable
-exec_always	~/.sway/clamshell.sh
+set $clamshell ~/.config/sway/clamshell.sh
+bindswitch --reload --locked lid:on $clamshell open
+bindswitch --reload --locked lid:off $clamshell close
+exec_always	$clamshell
 
 include /etc/sway/config.d/*
