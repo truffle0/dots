@@ -10,11 +10,11 @@ HISTFILE=/dev/null
 HISTSIZE=1000
 
 # auto completions and prompt
-if [ -f ~/.zshcomp ] ; then
-	. ~/.zshcomp
-fi
-#autoload -U promptinit
-#promptinit; prompt gentoo
+zstyle ':completion:*' completer _complete _ignored _correct
+zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]}' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=* r:|=*'
+
+autoload -Uz compinit
+compinit
 
 # prompt makery
 function generate_color_prompt() {
@@ -37,9 +37,9 @@ function generate_color_prompt() {
 	# Helpful prompt that shows (non 0) command status
 	RPROMPT='%(?..[%F{yellow}%?%f])'
 }
-generate_color_prompt
+generate_color_prompt 9
 
-# alias'
+# alias
 alias ls="ls --color=auto"
 alias ip="ip --color=auto"
 alias dots='/usr/bin/git --git-dir=$HOME/.dots --work-tree=$HOME'
@@ -62,11 +62,11 @@ if [[ `id -u` != 0 ]] ; then
 		function swayin() {
 			# Verify this is a raw tty, not a pty
 			if [[ ! `tty` =~ "/dev/tty[1234567890]" ]] ; then
-				echo "Not a valid TTY!"
+				echo "Not a TTY!"
 				return 1
 			fi
 
-			# Set env variables
+			# General env
 			export XDG_CURRENT_DESKTOP="sway"
 			export MOZ_ENABLE_WAYLAND=1
 			export _JAVA_AWT_WM_NONREPARENTING=1
@@ -74,6 +74,13 @@ if [[ `id -u` != 0 ]] ; then
 			export QT_QPA_PLATFORMTHEME=qt5ct
 
 			export LESS="${LESS} --mouse"
+			
+			# wlroots env
+			export WLR_NO_HARDWARE_CURSORS=1
+			#export WLR_DRM_DEVICES="/dev/dri/card0:/dev/dri/card1"
+			
+			# Initialise agents
+			eval `ssh-agent`
 
 			# Start sway
 			exec dbus-run-session -- sway
