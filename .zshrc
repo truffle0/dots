@@ -70,7 +70,8 @@ if [[ `id -u` != 0 ]] ; then
 			export XDG_CURRENT_DESKTOP="sway"
 			export MOZ_ENABLE_WAYLAND=1
 			export _JAVA_AWT_WM_NONREPARENTING=1
-
+			export GDK_BACKEND=wayland
+			
 			export QT_QPA_PLATFORMTHEME=qt5ct
 
 			export LESS="${LESS} --mouse"
@@ -78,7 +79,7 @@ if [[ `id -u` != 0 ]] ; then
 			# wlroots env
 			export WLR_NO_HARDWARE_CURSORS=1
 			#export WLR_DRM_DEVICES="/dev/dri/card0:/dev/dri/card1"
-			
+
 			# Initialise agents
 			eval `ssh-agent`
 
@@ -102,3 +103,6 @@ tcsh_autolist() { if [[ -z ${LBUFFER// } ]]
     else zle expand-or-complete-prefix; fi }
 zle -N tcsh_autolist
 bindkey '^I' tcsh_autolist
+
+# zoxide init
+eval "$(zoxide init --cmd=cd zsh)"

@@ -23,8 +23,8 @@ set $term alacritty -e zsh
 set $menu tofi-drun | xargs swaymsg exec --
 
 set $lock swaylock
-set $suspend loginctl suspend
-set $hibernate loginct hibernate
+set $suspend loginctl suspend-then-hibernate
+set $hibernate loginctl hibernate
 
 ## Startup programs
 exec gentoo-pipewire-launcher restart 
@@ -82,7 +82,7 @@ smart_gaps on
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg ~/Pictures/DesktopWallpapers/wondering.png fill
+output * bg ~/.config/sway/wallpapers/mountain.jpg fill
 # You can get the names of your outputs by running: swaymsg -t get_outputs
 output eDP-1 {
     scale 1.5
@@ -90,17 +90,23 @@ output eDP-1 {
 }
 
 output 'ASUSTek COMPUTER INC VG258 L6LMQS134534' {
-    pos 0 0
+	pos 1200 580
     mode 1920x1080@144Hz
 }
 
 output 'Philips Consumer Electronics Company PHL 241E9 0x00001357' {
-    pos 1920 0
+	pos 3120 150
     mode 1920x1080@60Hz
+}
+output 'HP Inc. HP E24i G4 6CM2331F6L' {
+	transform 270
+    pos 0 0
+	mode 1920x1200@60Hz
 }
 
 ### Idle configuration
 bindsym $mod+o exec $lock
+bindsym $mod+Shift+o exec $suspend
 exec swayidle -w \
 	timeout 300 "swaymsg 'output * dpms off'" resume "swaymsg 'output * dpms on'" \
 	timeout 600 "$lock && swaymsg 'output * dpms off'" resume "swaymsg 'output * dpms on'" \
@@ -278,7 +284,9 @@ bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym Shift+XF86AudioMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 bindsym XF86AudioPlay exec playerctl play-pause
 bindsym XF86AudioNext exec playerctl next
+bindsym Alt+XF86AudioRaiseVolume exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
+bindsym Alt+XF86AudioLowerVolume exec playerctl previous
 bindsym XF86MonBrightnessUp exec light -A 10
 bindsym XF86MonBrightnessDown exec light -U 10
 
