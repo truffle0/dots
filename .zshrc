@@ -3,9 +3,11 @@ setopt autocd extendedglob nomatch notify autolist
 unsetopt beep
 bindkey -v
 
-# History config (don't save it, that's annoying)
+# History config (don't save it, it's annoying)
 export LESSHISTORYFILE=/dev/null
 export MYSQL_HISTFILE=/dev/null
+export SQLITE_HISTORY=/dev/null
+export PYTHONSTARTUP="$HOME/.pythonrc"
 HISTFILE=/dev/null
 HISTSIZE=1000
 
