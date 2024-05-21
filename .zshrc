@@ -3,7 +3,7 @@ setopt autocd extendedglob nomatch notify autolist
 unsetopt beep
 bindkey -v
 
-# History config
+# History config (don't save it, that's annoying)
 export LESSHISTORYFILE=/dev/null
 export MYSQL_HISTFILE=/dev/null
 HISTFILE=/dev/null
@@ -34,7 +34,7 @@ function generate_color_prompt() {
 	# CWD indicator
 	PROMPT="${PROMPT}%F{blue}%~%f %#%b "
 
-	# Helpful prompt that shows (non 0) command status
+	# Helpful prompt that shows (non 0) return status
 	RPROMPT='%(?..[%F{yellow}%?%f])'
 }
 generate_color_prompt 9
@@ -42,10 +42,10 @@ generate_color_prompt 9
 # alias
 alias ls="ls --color=auto"
 alias ip="ip --color=auto"
-alias dots='/usr/bin/git --git-dir=$HOME/.dots --work-tree=$HOME'
+[[ -d ~/.dots ]] && alias dots='/usr/bin/git --git-dir=$HOME/.dots --work-tree=$HOME'
 
-# Env
-umask 0027
+# General Env
+[[ `id -u` != 0 ]] && umask 0027
 export GPG_TTY=`tty`
 export LESS="${LESS} --mouse"
 
@@ -89,12 +89,6 @@ if [[ `id -u` != 0 ]] ; then
 	fi
 fi
 
-function reenv() {
-	echo "Restoring default system environment"
-	source /etc/profile
-	source ~/.zshrc
-}
-
 
 # expanded zsh behaviour
 tcsh_autolist() { if [[ -z ${LBUFFER// } ]]
@@ -105,29 +99,26 @@ tcsh_autolist() { if [[ -z ${LBUFFER// } ]]
 zle -N tcsh_autolist
 bindkey '^I' tcsh_autolist
 
-# fzf integration
+# fzf integration & verification
+FZF_SUM="e984037a9ceef89e9b424b835f5226e721ce911a9cb772f96eb75d725336854c"
 if `which fzf &> /dev/null`; then
-	FZF_SUM="e984037a9ceef89e9b424b835f5226e721ce911a9cb772f96eb75d725336854c"
 
 	if `echo "$FZF_SUM $(which fzf)" | sha256sum --status -c`; then
 		eval "$(fzf --zsh)"
 	else
 		echo "FAILED TO VERIFY `which fzf`!"	
 	fi
-
-	unset FZF_SUM
 fi
+unset FZF_SUM
 	
 
-# zoxide init
+# zoxide init & verification
+ZOXIDE_SUM="4f5fe47ea3e340190fdbb82448d03da6f3197324e7008de13401785d8fb93c91"
 if `which zoxide &> /dev/null` ; then
-	ZOXIDE_SUM="4f5fe47ea3e340190fdbb82448d03da6f3197324e7008de13401785d8fb93c91"
-
 	if `echo "$ZOXIDE_SUM $(which zoxide)" | sha256sum --status -c`; then
 		eval "$(zoxide init --cmd=cd zsh)"
 	else
 		echo "FAILED TO VERIFY `which zoxide`!"
 	fi
-	
-	unset ZOXIDE_SUM
 fi
+unset ZOXIDE_SUM
