@@ -1,0 +1,199 @@
+; Windows
+(defwindow topbar
+	:monitor '["<primary>", "VG258", "eDP-1", 0]'
+	:hexpand false
+	:vexpand false
+	:geometry (geometry :anchor "top center" :x 0 :y 0 :width "100%")
+	:reserve (struts :distance "10px" :side "top")
+	:exclusive true
+	:stacking "bottom"
+	(topbar :screen 0))
+
+; topbar
+(defwidget topbar [screen]
+	(box :orientation "h"
+		:space-evenly true
+		(box :halign "start"
+			:space-evenly false
+			(systray :icon-size 20 :class "systray")
+			(workspaces)
+		)
+		(box :halign "center"
+			:space-evenly false
+			:spacing 12
+			:hexpand false
+			(idleinhibit)
+			(time)
+			(speaker)
+			(microphone)
+		)
+		(sysinfo)
+	)
+)
+
+; Variables
+
+(deflisten workspaces_listen "./modules/workspaces.sh")
+(deflisten player_listen :initial '{"show": "no", "content": ""}' "./modules/player.sh")
+(deflisten notifications_listen :initial '{"show": "no", "content": ""}' "./modules/notifications.sh")
+
+(defpoll microphone_poll :interval "999h" "./modules/microphone.sh")
+(defpoll speaker_poll :interval "999h" "./modules/speaker.sh")
+
+
+; CLOCK
+(defwidget time []
+	(label :class "time" :text "${formattime(EWW_TIME, "%r - %a %d/%m/%Y")}")
+)
+
+; Modules
+(defwidget workspaces []
+	(literal :content workspaces_listen)
+)
+
+(defwidget player []
+(icon-module :class "player" :icon "" :visible {player_listen.show == "yes"}
+	(literal :content {player_listen.content})))
+
+(defwidget notifications []
+	(icon-module :class "notifications" :icon "" :visible {notifications_listen.show == "yes"}
+		(literal :content {notifications_listen.content}))) 
+
+; SYSTEM INFO MODULES
+(defwidget sysinfo []
+	(box
+		:class "sysinfo"
+		:halign "end"
+		:space-evenly false
+		:hexpand true
+		(cpu)
+		(ram)
+		(network)
+		(battery :bat "BAT1")
+		(disk :mount "/")
+		(temperature :comp "CORETEMP_PACKAGE_ID_0")
+	)
+)
+
+(defwidget cpu []
+	(box
+		:orientation "h"
+		:halign "end"
+		:space-evenly false
+		:class "cpu"
+		(label :text "${round(EWW_CPU.avg, 0)}%")
+		(label :class "icon" :text "")
+	)
+)
+
+(defwidget ram []
+	(box
+		:orientation "h"
+		:halign "end"
+		:space-evenly false
+		:class "ram ${EWW_RAM.used_mem_perc > 90 ? "warn" : "normal"}"
+		(label :text "${round(EWW_RAM.used_mem_perc, 1)}%")
+		(label :class "icon" :text "")
+	)
+)
+
+(deflisten netinfo :initial '{"connected": false}' "./modules/net.py")
+(defwidget network []
+	(tooltip
+		(label :class "tooltip" :text "${netinfo.connected ? netinfo.interfaces[0].ifname : "n/c"}")
+		(box
+			:orientation "h"
+			:halign "end"
+			:space-evenly false
+			:class "network ${netinfo.connected ? "connected" : ""}"
+			(label :text "${netinfo.connected ? netinfo.interfaces[0].addr : "n/c"}")
+			(label :class "icon" :text "")
+		)
+	)
+)
+
+(defwidget temperature[comp]
+	(box
+		:orientation "h"
+		:halign "end"
+		:space-evenly false
+		:class "temp ${EWW_TEMPS[comp] >= 70 ? (EWW_TEMPS[comp] >= 90 ? "danger" : "warn") : "normal"}"
+		(label :text "${EWW_TEMPS[comp]}℃")
+		(label :class "icon" :text "")
+	)
+)
+
+(defwidget disk [mount]
+	(tooltip
+		(label :class "tooltip" :text "${round(EWW_DISK[mount].used / (1024*1024*1024), 0)} GiB / ${round(EWW_DISK[mount].total / (1024*1024*1024), 0)} GiB")
+		(box
+			:orientation "h"
+			:halign "end"
+			:space-evenly false
+			:class "disk ${EWW_DISK[mount].used_perc > 90 ? "warn" : "normal"}"
+			(label :text "${round(EWW_DISK[mount].used_perc, 2)}%")
+			(label :class "icon" :text "")
+		)
+	)
+)
+
+(defwidget battery [bat]
+	(box
+		:orientation "h"
+		:halign "end"
+		:space-evenly false
+		:class "battery ${EWW_BATTERY[bat].capacity < 30 ? (EWW_BATTERY[bat].capacity < 15 ? "danger" : "warn") : "normal"}"
+		(label :text "${EWW_BATTERY.BAT1.capacity}%")
+		(label :class "icon" :text "${EWW_BATTERY.BAT1.status == "Discharging" ? "" : ""}")
+	)
+)
+
+; SOUND MODULES
+(deflisten sound_info :initial '{"sink": {}, "source": {}}' "./modules/sound.py")
+(defwidget speaker []
+	(eventbox
+		:onscroll `./modules/volume.sh sink {}`
+		:onclick `swaymsg exec 'pavucontrol -t 3' > /dev/null`
+		:onrightclick `pactl set-sink-mute @DEFAULT_SINK@ toggle`
+		(tooltip
+			(label :class "tooltip" :text "${sound_info.sink.name ?: "nc"}")
+			(box
+				:orientation "h"
+				:halign "end"
+				:space-evenly false
+				:class "sound speaker ${sound_info.sink.mute ?: true ? "mute" : ""}"
+				(label
+					:visible {!(sound_info.sink.mute ?: true)}
+					:text "${sound_info.sink.volume ?: 0}%")
+				(label :class "icon" :text "${sound_info.sink.mute ?: true ? "" : "🕪"}")
+			)
+		)
+	)
+)
+
+(defwidget microphone []
+	(eventbox
+		:onscroll `./modules/volume.sh source {}`
+		:onmiddleclick `swaymsg exec 'pavucontrol -t 4' > /dev/null`
+		:onrightclick `pactl set-source-mute @DEFAULT_SOURCE@ toggle`
+		(tooltip
+			(label :class "tooltip" :text "${sound_info.source.name ?: "nc"}")
+			(box
+				:orientation "h"
+				:halign "end"
+				:space-evenly false
+				:class "sound mic ${sound_info.source.mute ?: true ? "mute" : ""}"
+				(label
+					:visible {!(sound_info.source.mute ?: true)}
+					:text "${sound_info.source.volume ?: 0}%")
+				(label :class "icon" :text "${sound_info.source.mute ?: true ? "" : ""}")
+			)
+		)
+	)
+)
+
+
+; IDLE INHIBITOR
+(defwidget idleinhibit []
+	(label :text "")
+)

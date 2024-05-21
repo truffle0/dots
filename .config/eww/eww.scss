@@ -1,0 +1,134 @@
+$foreground: #ffffff;
+$grey: #aaaaaa;
+$foreground-alt: #465059;
+$background: transparent;
+$black: #000000;
+$red: #ff6565;
+$green: #b8cc52;
+$yellow: #e6c446;
+$blue: #68d4ff;
+$magenta: #ffa3aa;
+$cyan: #36a3d9;
+$white: #ffffff;
+
+//#fda398
+
+* {
+  padding: 0px;
+}
+
+window {
+  background: transparent;
+}
+
+.topbar {
+  font-family: "Hack";
+  font-weight: bold;
+  font-size: 14px;
+  margin: 0 10px;
+  padding-top: 3px;
+  padding-bottom: 1px;
+}
+
+.icon {
+  margin-left: 5px;
+}
+
+// Clock style
+.time {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+/* SYSTEM INFO BAR STUFF*/
+.sysinfo > * {
+  margin-left: 5px;
+  padding-left: 5px;
+  padding-right: 2px;
+  border-radius: 3px;
+}
+
+.cpu {
+  color: pink;
+}
+
+.ram.normal {
+  color: lightblue;
+}
+.ram.warn {
+  color: red;
+}
+
+@keyframes blink_red {
+  to {
+    background-color: red;
+    color: black;
+  }
+}
+
+.temp.normal, .battery.normal {
+  color: lightgreen;
+}
+.temp.warn, .battery.warn {
+  color: yellow;
+}
+.temp.danger, .battery.danger {
+  color: red;
+  animation-duration: 1s;
+  animation-name: blink_red;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.disk.normal {
+  color: lightgrey;
+}
+.disk.warn {
+  color: yellow;
+}
+
+.network:not(.connected) {
+  color: red;
+}
+.network.connected {
+  color: $blue;
+}
+
+/* SYSTEM TRAY STYLES */
+.systray > * {
+  border-radius: 5px;
+  background-color: rgba(128, 128, 128, 0.5);
+
+  image {
+    margin-left: 7px;
+    margin-right: 7px;
+  }
+}
+
+.workspaces {
+  font-size: 12px;
+  margin-right: 20px;
+
+  button {
+    margin: 0px 3px;
+  }
+  .occupied {
+    color: $grey;
+  }
+
+  .focused {
+    color: $white;
+  }
+
+  .urgent {
+    color: $red; 
+  }
+
+  .empty {
+    padding-top: 2px;
+    color: $foreground-alt;
+    font-size: 10px;
+  }
+
+}

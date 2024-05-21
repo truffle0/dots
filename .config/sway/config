@@ -25,23 +25,20 @@ set $menu tofi-drun | xargs swaymsg exec --
 set $lock swaylock
 set $suspend loginctl suspend-then-hibernate
 set $hibernate loginctl hibernate
+set $clamshell ~/.config/sway/clamshell.sh
 
 ## Startup programs
 exec gentoo-pipewire-launcher restart 
 exec lxqt-policykit-agent 
 exec nm-applet --indictor
 exec dunst #notifications
+exec_always eww kill ; eww open topbar
 bar {
     id 0
-    swaybar_command .config/sway/waybarb
+    swaybar_command waybar
     hidden_state hide
     mode hide
     modifier Mod4
-}
-bar {
-	id 1
-    output eDP-1
-	swaybar_command waybar
 }
 
 #Portals
@@ -112,6 +109,7 @@ exec swayidle -w \
 	timeout 600 "$lock && swaymsg 'output * dpms off'" resume "swaymsg 'output * dpms on'" \
 	before-sleep "$lock" \
 	after-resume "swaymsg 'output * dpms on'" \
+	after-resume "swaymsg exec $clamshell" \
 	lock "$lock && swaymsg 'output * dpms off'" \
 	unlock "swaymsg 'output * dpms on'" \
 	idlehint 600
@@ -125,7 +123,11 @@ input "type:touchpad" {
        middle_emulation enabled
        accel_profile adaptive
 }
-#
+
+input "type:keyboard" {
+    xkb_options compose:ralt
+}
+
 input "1:1:AT_Translated_Set_2_keyboard" {
     xkb_layout gb
 	xkb_options compose:ralt
@@ -269,7 +271,7 @@ mode "resize" {
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
-bindsym $mod+r mode "resize"
+#bindsym $mod+r mode "resize"
 
 # Screen shots
 bindsym $ps1 exec grim - | swappy -f - -o /tmp/screenshot.png 
@@ -291,9 +293,8 @@ bindsym XF86MonBrightnessUp exec light -A 10
 bindsym XF86MonBrightnessDown exec light -U 10
 
 # Laptop Screen handling
-set $clamshell ~/.config/sway/clamshell.sh
-bindswitch --reload --locked lid:on $clamshell open
-bindswitch --reload --locked lid:off $clamshell close
+bindswitch --locked lid:on exec $clamshell close
+bindswitch --locked lid:off exec $clamshell open
 exec_always	$clamshell
 
 include /etc/sway/config.d/*
