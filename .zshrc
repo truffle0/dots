@@ -95,6 +95,7 @@ function reenv() {
 	source ~/.zshrc
 }
 
+
 # expanded zsh behaviour
 tcsh_autolist() { if [[ -z ${LBUFFER// } ]]
 	# list dir with TAB, when there are only spaces/no text before cursor,
@@ -104,5 +105,13 @@ tcsh_autolist() { if [[ -z ${LBUFFER// } ]]
 zle -N tcsh_autolist
 bindkey '^I' tcsh_autolist
 
+# fzf integration
+if `which fzf &> /dev/null`; then
+	eval "$(fzf --zsh)"	
+fi
+	
+
 # zoxide init
-eval "$(zoxide init --cmd=cd zsh)"
+if `which zoxide &> /dev/null` ; then
+	eval "$(zoxide init --cmd=cd zsh)"
+fi
