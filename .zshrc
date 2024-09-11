@@ -101,26 +101,27 @@ tcsh_autolist() { if [[ -z ${LBUFFER// } ]]
 zle -N tcsh_autolist
 bindkey '^I' tcsh_autolist
 
+# PARANOID TESTING BELOW
 # fzf integration & verification
-FZF_SUM="e984037a9ceef89e9b424b835f5226e721ce911a9cb772f96eb75d725336854c"
-if `which fzf &> /dev/null`; then
-
-	if `echo "$FZF_SUM $(which fzf)" | sha256sum --status -c`; then
-		eval "$(fzf --zsh)"
-	else
-		echo "FAILED TO VERIFY `which fzf`!"	
-	fi
-fi
-unset FZF_SUM
+#FZF_SUM="8f59e2d31323c9658fb03f0cab92e7b871273a629872d4a4ef136b437f307988"
+#if `which fzf &> /dev/null`; then
+#
+#	if `echo "$FZF_SUM $(which fzf)" | sha256sum --status -c`; then
+#		eval "$(fzf --zsh)"
+#	else
+#		echo "FAILED TO VERIFY `which fzf`!"	
+#	fi
+#fi
+#unset FZF_SUM
 	
 
 # zoxide init & verification
-ZOXIDE_SUM="4f5fe47ea3e340190fdbb82448d03da6f3197324e7008de13401785d8fb93c91"
-if `which zoxide &> /dev/null` ; then
-	if `echo "$ZOXIDE_SUM $(which zoxide)" | sha256sum --status -c`; then
-		eval "$(zoxide init --cmd=cd zsh)"
-	else
-		echo "FAILED TO VERIFY `which zoxide`!"
-	fi
-fi
+#ZOXIDE_SUM="cdc58f8dbeebf71bad9ad2051b45e4072ad2e99dc6b5eaeddc91a91907f73462"
+#if `which zoxide &> /dev/null` ; then
+#	if `echo "$ZOXIDE_SUM $(which zoxide)" | sha256sum --status -c`; then
+#		eval "$(zoxide init --cmd=cd zsh)"
+#	else
+#		echo "FAILED TO VERIFY `which zoxide`!"
+#	fi
+#fi
 unset ZOXIDE_SUM

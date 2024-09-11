@@ -4,3 +4,4 @@ set ttymouse=sgr
 set mouse=a
 
 set nowrap
+
