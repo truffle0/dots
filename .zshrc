@@ -45,9 +45,10 @@ generate_color_prompt 9
 alias ls="ls --color=auto"
 alias ip="ip --color=auto"
 [[ -d ~/.dots ]] && alias dots='/usr/bin/git --git-dir=$HOME/.dots --work-tree=$HOME'
+alias fucking=sudo # yes, I'm immature :P
 
 # General Env
-[[ `id -u` != 0 ]] && umask 0027
+[[ `id -u` != 0 ]] && umask 0027 || umask 0022
 export GPG_TTY=`tty`
 export LESS="${LESS} --mouse"
 
@@ -101,13 +102,14 @@ tcsh_autolist() { if [[ -z ${LBUFFER// } ]]
 zle -N tcsh_autolist
 bindkey '^I' tcsh_autolist
 
-# PARANOID TESTING BELOW
+# paranoid testing below, disabled for now since it's annoying
+
 # fzf integration & verification
 #FZF_SUM="8f59e2d31323c9658fb03f0cab92e7b871273a629872d4a4ef136b437f307988"
 #if `which fzf &> /dev/null`; then
 #
 #	if `echo "$FZF_SUM $(which fzf)" | sha256sum --status -c`; then
-#		eval "$(fzf --zsh)"
+		eval "$(fzf --zsh)"
 #	else
 #		echo "FAILED TO VERIFY `which fzf`!"	
 #	fi
@@ -119,9 +121,9 @@ bindkey '^I' tcsh_autolist
 #ZOXIDE_SUM="cdc58f8dbeebf71bad9ad2051b45e4072ad2e99dc6b5eaeddc91a91907f73462"
 #if `which zoxide &> /dev/null` ; then
 #	if `echo "$ZOXIDE_SUM $(which zoxide)" | sha256sum --status -c`; then
-#		eval "$(zoxide init --cmd=cd zsh)"
+		eval "$(zoxide init --cmd=cd zsh)"
 #	else
 #		echo "FAILED TO VERIFY `which zoxide`!"
 #	fi
 #fi
-unset ZOXIDE_SUM
+#unset ZOXIDE_SUM

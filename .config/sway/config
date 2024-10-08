@@ -16,12 +16,12 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $term alacritty -e zsh
+set $term kitty
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
 set $menu tofi-drun | xargs swaymsg exec --
-#set $menu fuzzel
+set $menu_exec tofi-run --require-match=false --text-cursor=true | xargs swaymsg exec --
 
 set $lock swaylock
 set $suspend loginctl suspend-then-hibernate
@@ -103,8 +103,7 @@ exec swayidle -w \
 	timeout 300 "swaymsg 'output * dpms off'" resume "swaymsg 'output * dpms on'" \
 	timeout 600 "$lock && swaymsg 'output * dpms off'" resume "swaymsg 'output * dpms on'" \
 	before-sleep "$lock" \
-	after-resume "swaymsg 'output * dpms on'" \
-	after-resume "swaymsg exec $clamshell" \
+	after-resume "swaymsg 'output * dpms on' ; swaymsg exec $clamshell" \
 	lock "$lock && swaymsg 'output * dpms off'" \
 	unlock "swaymsg 'output * dpms on'" \
 	idlehint 600
@@ -145,6 +144,7 @@ input '1386:912:Wacom_Cintiq_16_Pen' map_to_output 'Wacom Tech Cintiq 16 9JQ00X1
 
     # Start your launcher
     bindsym $mod+d exec $menu
+    bindsym $mod+Shift+d exec $menu_exec
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
