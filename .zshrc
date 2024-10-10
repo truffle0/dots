@@ -106,24 +106,24 @@ bindkey '^I' tcsh_autolist
 
 # fzf integration & verification
 #FZF_SUM="8f59e2d31323c9658fb03f0cab92e7b871273a629872d4a4ef136b437f307988"
-#if `which fzf &> /dev/null`; then
-#
-#	if `echo "$FZF_SUM $(which fzf)" | sha256sum --status -c`; then
+if `which fzf &> /dev/null`; then
+
+	#if `echo "$FZF_SUM $(which fzf)" | sha256sum --status -c`; then
 		eval "$(fzf --zsh)"
-#	else
-#		echo "FAILED TO VERIFY `which fzf`!"	
-#	fi
-#fi
+	#else
+	#	echo "FAILED TO VERIFY `which fzf`!"	
+	#fi
+fi
 #unset FZF_SUM
 	
 
 # zoxide init & verification
 #ZOXIDE_SUM="cdc58f8dbeebf71bad9ad2051b45e4072ad2e99dc6b5eaeddc91a91907f73462"
-#if `which zoxide &> /dev/null` ; then
-#	if `echo "$ZOXIDE_SUM $(which zoxide)" | sha256sum --status -c`; then
+if `which zoxide &> /dev/null` ; then
+	#if `echo "$ZOXIDE_SUM $(which zoxide)" | sha256sum --status -c`; then
 		eval "$(zoxide init --cmd=cd zsh)"
-#	else
-#		echo "FAILED TO VERIFY `which zoxide`!"
-#	fi
-#fi
+	#else
+	#	echo "FAILED TO VERIFY `which zoxide`!"
+	#fi
+fi
 #unset ZOXIDE_SUM
