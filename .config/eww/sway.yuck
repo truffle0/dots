@@ -1,0 +1,33 @@
+; Parse swaymsg for info
+(deflisten sway_info :initial '{}' "swaymsg -r -m -t get_workspaces")
+
+(defwidget sway_workspaces [screen]
+    (box
+        :class sway_workspaces
+        :orientation "h"
+        :halign "start"
+        :space-evenly false
+        (for workspace in sway_info
+            ({workspace?.screen == screen} ?
+                (box
+                    :orientation "h"
+                    :halign "end"
+                    (label workspace.screen.name)
+                ) : ;nothing otherwise
+            )
+        )
+    )
+)
+
+
+(defwidget sway_taskbar[screen]
+    (box
+        :class sway_taskbar
+        :halign "center"
+        :space-evenly false
+        :hexpand true
+;        (for task in sway_workspaces
+;
+;        )
+    )
+)

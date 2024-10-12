@@ -40,7 +40,6 @@
 (defpoll microphone_poll :interval "999h" "./modules/microphone.sh")
 (defpoll speaker_poll :interval "999h" "./modules/speaker.sh")
 
-
 ; CLOCK
 (defwidget time []
 	(label :class "time" :text "${formattime(EWW_TIME, "%r - %a %d/%m/%Y")}")
@@ -71,7 +70,7 @@
 		(network)
 		(battery :bat "BAT1")
 		(disk :mount "/")
-		(temperature :comp "CORETEMP_PACKAGE_ID_0")
+		(temperature :comp "K10TEMP_TCTL")
 	)
 )
 
@@ -118,7 +117,7 @@
 		:halign "end"
 		:space-evenly false
 		:class "temp ${EWW_TEMPS[comp] >= 70 ? (EWW_TEMPS[comp] >= 90 ? "danger" : "warn") : "normal"}"
-		(label :text "${EWW_TEMPS[comp]}℃")
+		(label :text "${round(EWW_TEMPS[comp], 0)}℃")
 		(label :class "icon" :text "")
 	)
 )

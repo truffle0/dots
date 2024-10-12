@@ -4,3 +4,5 @@ import = ["~/.config/alacritty/carbonfox.toml",]
 dynamic_padding = true
 opacity = 0.85
 
+[font]
+normal = { family = "monospace", style = "regular" }
