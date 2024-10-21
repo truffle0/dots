@@ -41,13 +41,13 @@ function generate_color_prompt() {
 }
 generate_color_prompt 9
 
-# alias
+# aliaseses
 alias ls="ls --color=auto"
 alias ip="ip --color=auto"
 [[ -d ~/.dots ]] && alias dots='/usr/bin/git --git-dir=$HOME/.dots --work-tree=$HOME'
 alias fucking=sudo # yes, I'm immature :P
 
-# General Env
+# Useful env
 [[ `id -u` != 0 ]] && umask 0027 || umask 0022
 export GPG_TTY=`tty`
 export LESS="${LESS} --mouse"
@@ -61,35 +61,26 @@ if [[ `id -u` != 0 ]] ; then
 
 	if `which sway &> /dev/null` ; then
 		# Makes no sense to have this function if sway isn't installed
-
+		
 		function swayin() {
 			# Verify this is a raw tty, not a pty
 			if [[ ! `tty` =~ "/dev/tty[1234567890]" ]] ; then
 				echo "Not a TTY!"
 				return 1
 			fi
-
-			# General env
-			export XDG_CURRENT_DESKTOP="sway"
-			export MOZ_ENABLE_WAYLAND=1
-			export _JAVA_AWT_WM_NONREPARENTING=1
-			export GDK_BACKEND=wayland
 			
-			export QT_QPA_PLATFORMTHEME=qt5ct
-
-			export LESS="${LESS} --mouse"
-			
-			# wlroots env
-			export WLR_NO_HARDWARE_CURSORS=1
-			#export WLR_DRM_DEVICES="/dev/dri/card0:/dev/dri/card1"
-
-			# Initialise agents
-			eval `ssh-agent`
-
-			# Start sway
-			exec dbus-run-session -- sway
+			# Either launch sway using launcher script, fallback to dbus-run, or just sway
+			source "~/.config/sway/launch.sh" || exec dbus-run-session -- sway || sway
 		}
+		
+		# Variables that assume this is within a sway environment
+		if [ -S $SWAYSOCK ] ; then
+			# Gets sway to run something, so it's not a child of the terminal :)
+			alias swaydo="swaymsg exec --"
+			unset swayin
+		fi
 	fi
+
 fi
 
 
@@ -102,28 +93,10 @@ tcsh_autolist() { if [[ -z ${LBUFFER// } ]]
 zle -N tcsh_autolist
 bindkey '^I' tcsh_autolist
 
-# paranoid testing below, disabled for now since it's annoying
-
-# fzf integration & verification
-#FZF_SUM="8f59e2d31323c9658fb03f0cab92e7b871273a629872d4a4ef136b437f307988"
-if `which fzf &> /dev/null`; then
-
-	#if `echo "$FZF_SUM $(which fzf)" | sha256sum --status -c`; then
-		eval "$(fzf --zsh)"
-	#else
-	#	echo "FAILED TO VERIFY `which fzf`!"	
-	#fi
+# fzf integration & verification (paranoia alert)
+FZF_SUM="1c44bf524e708a5334fa2f9d0fb0d38f84dc241a33bd4da05cfd460c24d01c60"
+if `which fzf &> /dev/null` && [ "$FZF_SUM" ]; then
+	`echo "$FZF_SUM $(which fzf)" | sha256sum --status -c 2>/dev/null` || echo "FAILED TO VERIFY `which fzf`!"
+	eval "$(fzf --zsh)"
 fi
-#unset FZF_SUM
-	
-
-# zoxide init & verification
-#ZOXIDE_SUM="cdc58f8dbeebf71bad9ad2051b45e4072ad2e99dc6b5eaeddc91a91907f73462"
-if `which zoxide &> /dev/null` ; then
-	#if `echo "$ZOXIDE_SUM $(which zoxide)" | sha256sum --status -c`; then
-		eval "$(zoxide init --cmd=cd zsh)"
-	#else
-	#	echo "FAILED TO VERIFY `which zoxide`!"
-	#fi
-fi
-#unset ZOXIDE_SUM
+unset FZF_SUM
