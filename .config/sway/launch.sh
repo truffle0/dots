@@ -6,7 +6,7 @@ export MOZ_ENABLE_WAYLAND=1
 export _JAVA_AWT_WM_NONREPARENTING=1
 
 export GDK_BACKEND=wayland
-export QT_QPA_PLATFORM=qt6ct
+export QT_QPA_PLATFORMTHEME=qt6ct
 
 export LESS="${LESS} --mouse"
 

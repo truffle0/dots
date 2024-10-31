@@ -1,6 +1,6 @@
 ; Windows
 (defwindow topbar
-	:monitor '["<primary>", "VG258", "eDP-1", 0]'
+	:monitor '["<primary>", "VG27AQ3A", "eDP-1", 0]'
 	:hexpand false
 	:vexpand false
 	:geometry (geometry :anchor "top center" :x 0 :y 0 :width "100%")

@@ -56,7 +56,9 @@ export LESS="${LESS} --mouse"
 if [[ `id -u` != 0 ]] ; then
 	# Only available to non-root users
 	function rootme() {
-		exec sudo -i su
+		# doing it this way allows the operation to be cancelled and return to shell
+		sudo true && exec sudo -i su
+		sudo --reset-timestamp
 	}
 
 	if `which sway &> /dev/null` ; then
@@ -70,7 +72,7 @@ if [[ `id -u` != 0 ]] ; then
 			fi
 			
 			# Either launch sway using launcher script, fallback to dbus-run, or just sway
-			source "~/.config/sway/launch.sh" || exec dbus-run-session -- sway || sway
+			source ~/.config/sway/launch.sh || exec dbus-run-session -- sway || sway
 		}
 		
 		# Variables that assume this is within a sway environment
