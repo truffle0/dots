@@ -15,6 +15,6 @@ export WLR_NO_HARDWARE_CURSORS=1
 #export WLR_DRM_DEVICES="/dev/dri/card0:/dev/dri/card1"
 
 # Everybody needs an agent
-eval `ssh-agent`
+export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 
 exec dbus-run-session -- sway

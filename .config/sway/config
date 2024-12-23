@@ -13,7 +13,8 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $term kitty
+#set $term kitty
+set $term alacritty
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
@@ -30,6 +31,7 @@ exec gentoo-pipewire-launcher restart
 exec lxqt-policykit-agent 
 exec nm-applet --indictor
 exec dunst
+exec gpg-agent --daemon
 exec_always eww kill ; eww open topbar
 bar {
     id 0
@@ -100,8 +102,8 @@ bindsym $mod+Shift+o exec $suspend
 exec swayidle -w \
 	timeout 300 "swaymsg 'output * dpms off'" resume "swaymsg 'output * dpms on'" \
 	timeout 600 "$lock && swaymsg 'output * dpms off'" resume "swaymsg 'output * dpms on'" \
-	before-sleep "$lock" \
-	after-resume "swaymsg 'output * dpms on' ; swaymsg exec $clamshell" \
+	before-sleep "$lock ; rfkill block bluetooth" \
+	after-resume "swaymsg 'output * dpms on' ; swaymsg exec $clamshell ; rfkill unblock bluetooth" \
 	lock "$lock && swaymsg 'output * dpms off'" \
 	unlock "swaymsg 'output * dpms on'" \
 	idlehint 600
@@ -221,6 +223,10 @@ bindsym $mod+Shift+9 move container to workspace number 9
 bindsym $mod+Shift+0 move container to workspace number 10
 # Note: workspaces can have any name you want, not just numbers.
 # We just use 1-10 as the default.
+
+# Gestures to switch between workspaces
+bindgesture swipe:right workspace next
+bindgesture swipe:left workspace prev
 
 #
 # Layout stuff:

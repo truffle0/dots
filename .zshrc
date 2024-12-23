@@ -24,22 +24,25 @@ function generate_color_prompt() {
 
 	# Create the user/machine name prefix
 	if [[ `id -u` != 0 ]] ; then
-		# Generate a unique color for the machine's prompt
-		# Change $1 to use a different option
-		local OFFSET=${1:-6}
-		local MACHINE_COLOR=`hostname | md5sum | awk '{ print substr($1, '"${OFFSET}"', 6) }'`
+		# Generate a unique color from the machine prompt
+		# Change $1 to use a different option (changes substring offset)
+		local HASH=$(echo $HOST | md5sum)
+		local MACHINE_COLOR=${HASH:${1:-6}:6}
 		PROMPT="${PROMPT}%B%F{green}%n%f@%F{#${MACHINE_COLOR}}%m%f "
 	else
 		PROMPT="${PROMPT}%B%F{red}%m%f "
 	fi
 
+	# Shell level indicator for levels > 1
+	PROMPT="${PROMPT}%(2L.%F{red}(%L%)%f .)"
+	
 	# CWD indicator
 	PROMPT="${PROMPT}%F{blue}%~%f %#%b "
 
-	# Helpful prompt that shows (non 0) return status
+	# Show (non 0) return status of command on the right
 	RPROMPT='%(?..[%F{yellow}%?%f])'
 }
-generate_color_prompt 9
+generate_color_prompt 8
 
 # aliaseses
 alias ls="ls --color=auto"
@@ -57,7 +60,7 @@ if [[ `id -u` != 0 ]] ; then
 	# Only available to non-root users
 	function rootme() {
 		# doing it this way allows the operation to be cancelled and return to shell
-		sudo true && exec sudo -i su
+		sudo true && exec sudo -i
 		sudo --reset-timestamp
 	}
 
@@ -96,7 +99,7 @@ zle -N tcsh_autolist
 bindkey '^I' tcsh_autolist
 
 # fzf integration & verification (paranoia alert)
-FZF_SUM="1c44bf524e708a5334fa2f9d0fb0d38f84dc241a33bd4da05cfd460c24d01c60"
+FZF_SUM="85c041874a1c2c6d31120520e9480049d08a36ea32b892cb0c9e7051880d1fe9"
 if `which fzf &> /dev/null` && [ "$FZF_SUM" ]; then
 	`echo "$FZF_SUM $(which fzf)" | sha256sum --status -c 2>/dev/null` || echo "FAILED TO VERIFY `which fzf`!"
 	eval "$(fzf --zsh)"
