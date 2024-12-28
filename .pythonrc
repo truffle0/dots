@@ -1,3 +1,7 @@
 # disable writes to the default ~/.python_history file, cause it's annoying
 import readline
-readline.write_history_file = lambda *args: None
+import atexit
+import sys
+
+readline.__interactivehook__()
+atexit.unregister(readline.write_history_file)

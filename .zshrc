@@ -34,10 +34,12 @@ function generate_color_prompt() {
 	fi
 
 	# Shell level indicator for levels > 1
-	PROMPT="${PROMPT}%(2L.%F{red}(%L%)%f .)"
+	#PROMPT="${PROMPT}%(2L.%F{red}(%L%)%f .)"
 	
-	# CWD indicator
-	PROMPT="${PROMPT}%F{blue}%~%f %#%b "
+	# CWD indicator & root/user symbol
+	# includes a conditional newline for terminals with <30 character space
+	local NL=$'\n'
+	PROMPT="${PROMPT}%F{blue}%~%f%-30(l. .${NL})%#%b "
 
 	# Show (non 0) return status of command on the right
 	RPROMPT='%(?..[%F{yellow}%?%f])'
@@ -87,7 +89,6 @@ if [[ `id -u` != 0 ]] ; then
 	fi
 
 fi
-
 
 # expanded zsh behaviour
 tcsh_autolist() { if [[ -z ${LBUFFER// } ]]
