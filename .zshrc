@@ -100,7 +100,7 @@ zle -N tcsh_autolist
 bindkey '^I' tcsh_autolist
 
 # fzf integration & verification (paranoia alert)
-FZF_SUM="85c041874a1c2c6d31120520e9480049d08a36ea32b892cb0c9e7051880d1fe9"
+FZF_SUM="ac0afadb98f2650e5ee8e83e7ea8cc8094a6ce9ef571d0453c96153d824bdeec"
 if `which fzf &> /dev/null` && [ "$FZF_SUM" ]; then
 	`echo "$FZF_SUM $(which fzf)" | sha256sum --status -c 2>/dev/null` || echo "FAILED TO VERIFY `which fzf`!"
 	eval "$(fzf --zsh)"
